@@ -14,23 +14,28 @@
 #include <string.h>
 
 // Create a copy of the string on the heap
-char *copy_string(const char *s) {
-    char *copy = malloc(strlen(s));
+char *copy_string(const char *s)
+{
+    char *copy = malloc(strlen(s) + 1 * sizeof(char));
     strcpy(copy, s);
     return copy;
 }
 
 // Create an array of n elements: element i equals i * i
-int *make_squares(int n) {
+int *make_squares(int n)
+{
     int *a = malloc(n * sizeof(int));
-    for (int i = 1; i < n; i++)
+    for (int i = 0; i < n; i++)
         a[i] = i * i;
     return a;
 }
 
-int main() {
+int main()
+{
     char *name = copy_string("Programming 1");
     printf("name = %s\n", name);
+
+    free(name);
 
     int *squares = make_squares(5);
     int sum = 0;
@@ -39,8 +44,8 @@ int main() {
     if (sum > 0)
         printf("sum of squares = %d\n", sum);
 
-    free(squares);
     printf("first square = %d\n", squares[1]);
+    free(squares);
 
     return 0;
 }

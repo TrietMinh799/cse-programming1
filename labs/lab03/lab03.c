@@ -10,18 +10,23 @@
 // ---------------------------------------------------------------------------
 // Simple test harness (no need to modify)
 static int passed = 0, total = 0;
-#define CHECK(expr)                                 \
-    do {                                            \
-        total++;                                    \
-        if (expr) {                                 \
-            passed++;                               \
-            printf("  PASS  %s\n", #expr);          \
-        } else {                                    \
-            printf("  FAIL  %s\n", #expr);          \
-        }                                           \
+#define CHECK(expr)                        \
+    do                                     \
+    {                                      \
+        total++;                           \
+        if (expr)                          \
+        {                                  \
+            passed++;                      \
+            printf("  PASS  %s\n", #expr); \
+        }                                  \
+        else                               \
+        {                                  \
+            printf("  FAIL  %s\n", #expr); \
+        }                                  \
     } while (0)
 
-static int same_array(const int *a, const int *b, int n) {
+static int same_array(const int *a, const int *b, int n)
+{
     if (a == NULL || b == NULL)
         return 0;
     for (int i = 0; i < n; i++)
@@ -32,45 +37,109 @@ static int same_array(const int *a, const int *b, int n) {
 // ---------------------------------------------------------------------------
 
 // 3.1 Swap the values of two variables
-void swap(int *a, int *b) {
-    // TODO
-    (void)a; (void)b;
+void swap(int *a, int *b)
+{
+    int temp = *a;
+    *a = *b;
+    *b = temp;
 }
 
 // 3.2 Find the min and max of the array (n >= 1), returned through pointers
-void min_max(const int *a, int n, int *min, int *max) {
+void min_max(const int *a, int n, int *min, int *max)
+{
     // TODO
-    (void)a; (void)n; (void)min; (void)max;
+    *min = *max = *a;
+    for (int i = 1; i < n; ++i)
+    {
+        if (*min > *(a + i))
+        {
+            *min = *(a + i);
+        }
+
+        if (*max < *(a + i))
+        {
+            *max = *(a + i);
+        }
+    }
 }
 
 // 3.3 Sum of the array. Do NOT use a[i]; use only *p and p++ (or *(a + i))
-int sum_pointer(const int *a, int n) {
+int sum_pointer(const int *a, int n)
+{
     // TODO
-    (void)a; (void)n;
-    return -1;
+    int sum = 0;
+    for (int i = 0; i < n; ++i)
+    {
+        sum += *a;
+        a++;
+    }
+    return sum;
 }
 
 // 3.4 Return a copy of the array, allocated on the heap (the caller will free it)
-int *copy_array(const int *a, int n) {
+int *copy_array(const int *a, int n)
+{
     // TODO: malloc(n * sizeof(int)), check for NULL, copy each element
-    (void)a; (void)n;
-    return NULL;
+    int *b = malloc(n * sizeof(int));
+    if (b == NULL)
+        return NULL;
+    for (int i = 0; i < n; ++i)
+    {
+        *(b + i) = *(a + i);
+    }
+    return b;
 }
 
 // 3.5 Return a new array containing only the even numbers of a (in the same order).
 //     Store the number of elements of the result in *returnSize.
-int *filter_even(const int *a, int n, int *returnSize) {
+int *filter_even(const int *a, int n, int *returnSize)
+{
     // TODO
-    (void)a; (void)n;
-    *returnSize = 0;
-    return NULL;
+    int cnt = 0;
+    for (int i = 0; i < n; ++i)
+    {
+        if (*(a + i) % 2 == 0)
+        {
+            cnt += 1;
+        }
+    }
+    *returnSize = cnt;
+    int *result = malloc(cnt * sizeof(int));
+    int j = 0;
+    for (int i = 0; i < n; ++i)
+    {
+        if (*(a + i) % 2 == 0)
+        {
+            *(result + j) = *(a + i);
+            j += 1;
+        }
+    }
+    return result;
 }
 
 // 3.6 Implement strdup yourself: return a heap copy of the string s
-char *my_strdup(const char *s) {
+char *my_strdup(const char *s)
+{
     // TODO: count the length, malloc(length + 1) - why +1?
-    (void)s;
-    return NULL;
+    // because there is a null terminator at the end of the string
+    int i = 0, length = 0;
+    while (s[i] != '\0')
+    {
+        length++;
+        i++;
+    }
+
+    char *copy = malloc((length + 1) * sizeof(char));
+    if (copy != NULL)
+    {
+        for (int j = 0; j < length; j++)
+        {
+            *(copy + j) = *(s + j);
+        }
+        *(copy + length) = '\0'; // null terminator
+    }
+
+    return copy;
 }
 
 // 3.7 Append value to the end of the dynamic array arr.
@@ -78,33 +147,62 @@ char *my_strdup(const char *s) {
 //     If full (*size == *capacity): double the capacity using realloc
 //     (if *capacity == 0, allocate 1 element).
 //     Return a pointer to the array (it may have changed after realloc).
-int *push_back(int *arr, int *size, int *capacity, int value) {
+int *push_back(int *arr, int *size, int *capacity, int value)
+{
     // TODO
-    (void)size; (void)capacity; (void)value;
+    if(*size == *capacity) {
+
+    } else {
+    }
     return arr;
 }
 
 // 3.8 Allocate a rows x cols matrix as int ** (Lecture 7), initialized to all 0
-int **alloc_matrix(int rows, int cols) {
+int **alloc_matrix(int rows, int cols)
+{
     // TODO: 1 malloc for the array of row pointers + rows calls to calloc, one per row
-    (void)rows; (void)cols;
-    return NULL;
+    int **matrix = malloc(rows * sizeof(int *));
+    for (int i = 0; i < rows; i++)
+    {
+        matrix[i] = calloc(cols, sizeof(int));
+        if (matrix[i] == NULL)
+        {
+            for (int j = 0; j < i; j++)
+            {
+                free(matrix[j]);
+            }
+            free(matrix);
+            return NULL;
+        }
+    }
+    return matrix;
 }
 
 // 3.8 Free the matrix: each row first, then the array of pointers
-void free_matrix(int **m, int rows) {
+void free_matrix(int **m, int rows)
+{
     // TODO
-    (void)m; (void)rows;
+    for (int i = 0; i < rows; ++i)
+    {
+        free(m[i]);
+    }
+    free(m);
 }
 
 // 3.9 Allocate an int on the heap, set it to value, and "return" it through parameter p
 //     (fixes the bug in out-of-scope-allocation_1.c)
-void allocate_int(int **p, int value) {
+void allocate_int(int **p, int value)
+{
     // TODO
-    (void)p; (void)value;
+    *p = malloc(sizeof(int));
+    if (*p != NULL)
+    {
+        **p = value;
+    }
 }
 
-int main() {
+int main()
+{
     printf("3.1 swap\n");
     int x = 1, y = 2;
     swap(&x, &y);
@@ -155,7 +253,8 @@ int main() {
         for (int j = 0; j < 4; j++)
             ok = ok && m[i][j] == 0;
     CHECK(ok);
-    if (m != NULL) {
+    if (m != NULL)
+    {
         m[2][3] = 42;
         CHECK(m[2][3] == 42);
         free_matrix(m, 3);
